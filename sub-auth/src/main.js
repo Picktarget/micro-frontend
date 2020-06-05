@@ -2,7 +2,7 @@
  * @Description:
  * @Author: zhaoj
  * @Date: 2020-06-03 16:17:56
- * @LastEditTime: 2020-06-04 09:40:15
+ * @LastEditTime: 2020-06-04 15:54:28
  * @LastEditors: zhaoj
  */
 
@@ -53,8 +53,23 @@ function storeTest(props) {
     })
 }
 
-export async function bootstrap() {
+export async function bootstrap({ components, utils, pager }) {
   console.log('[vue] vue app bootstraped')
+  Vue.use(components) // 注册主应用下发的组件
+
+  Vue.prototype.$mainUtils = utils // 把工具函数挂载在vue $mainUtils对象
+
+  // Object.keys(emitFnc).forEach(i => {
+  //   // 把mainEmit函数一一挂载
+  //   Vue.prototype[i] = emitFnc[i]
+  // })
+
+  pager.subscribe(v => {
+    // 在子应用注册呼机监听器，这里可以监听到其他应用的广播
+    console.log(`监听到子应用${v.from}发来消息：`, v)
+    // store.dispatch('app/setToken', v.token)   // 在子应用中监听到其他应用广播的消息后处理逻辑
+  })
+  Vue.prototype.$pager = pager
 }
 
 export async function mount(props) {
