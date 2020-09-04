@@ -1,23 +1,42 @@
-/*
- * @Description:
- * @Author: zhaoj
- * @Date: 2020-06-03 16:17:56
- * @LastEditTime: 2020-06-04 15:54:28
- * @LastEditors: zhaoj
- */
-
 import './public-path'
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Storage from 'vue-ls'
+import { Button, message, Modal, notification, Form, Tabs, Icon, Input, Row, Col } from 'ant-design-vue'
+
 import App from './App.vue'
 import routes from './router'
 import store from './store'
+import axios from '@/http'
+
+import 'normalize.css'
+import 'ant-design-vue/dist/antd.less'
+import '@/styles/index.scss'
 
 Vue.config.productionTip = false
+const options = {
+  namespace: 'vuejs__', // key prefix
+  name: 'ls', // name variable Vue.[ls] or this.[$ls],
+  storage: 'local' // storage name session, local, memory
+}
 
-Vue.use(ElementUI)
+Vue.use(axios)
+Vue.use(Storage, options)
+
+Vue.prototype.$axios = axios
+
+Vue.use(Button)
+Vue.use(Modal)
+Vue.use(Form)
+Vue.use(Tabs)
+Vue.use(Icon)
+Vue.use(Input)
+Vue.use(Row)
+Vue.use(Col)
+
+Vue.prototype.$message = message
+Vue.prototype.$modal = Modal
+Vue.prototype.$notification = notification
 
 let router = null
 let instance = null

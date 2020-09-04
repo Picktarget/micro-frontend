@@ -1,11 +1,3 @@
-/*
- * @Description:
- * @Author: zhaoj
- * @Date: 2020-06-04 09:26:00
- * @LastEditTime: 2020-06-04 09:39:01
- * @LastEditors: zhaoj
- */
-
 const path = require('path')
 const { name } = require('./package')
 
@@ -14,22 +6,14 @@ function resolve(dir) {
 }
 
 const port = 7100 // dev port
+const isProduction = process.env.NODE_ENV === 'production'
 
 module.exports = {
-  /**
-   * You will need to set publicPath if you plan to deploy your site under a sub path,
-   * for example GitHub Pages. If you plan to deploy your site to https://foo.github.io/bar/,
-   * then publicPath should be set to "/bar/".
-   * In most cases please use '/' !!!
-   * Detail: https://cli.vuejs.org/config/#publicpath
-   */
-  outputDir: 'dist',
+  publicPath: isProduction ? '/auth-sub' : '/',
+  outputDir: 'auth-sub',
   assetsDir: 'static',
   filenameHashing: true,
-  // tweak internal webpack configuration.
-  // see https://github.com/vuejs/vue-cli/blob/dev/docs/webpack.md
   devServer: {
-    // host: '0.0.0.0',
     hot: true,
     disableHostCheck: true,
     port,
@@ -39,6 +23,24 @@ module.exports = {
     },
     headers: {
       'Access-Control-Allow-Origin': '*'
+    },
+    proxy: {
+      [process.env.VUE_APP_BASE_API]: {
+        target: process.env.PROXY_URL_1,
+        pathRewrite: {
+          ['^' + process.env.VUE_APP_BASE_API]: ''
+        },
+        changeOrigin: true, // target是域名的话，需要这个参数，
+        secure: false
+      },
+      [process.env.VUE_APP_FILE_URL]: {
+        target: process.env.PROXY_URL_2,
+        pathRewrite: {
+          ['^' + process.env.VUE_APP_FILE_URL]: ''
+        },
+        changeOrigin: true, // target是域名的话，需要这个参数，
+        secure: false
+      }
     }
   },
   // 自定义webpack配置
@@ -50,9 +52,24 @@ module.exports = {
     },
     output: {
       // 把子应用打包成 umd 库格式
-      library: `${name}-[name]`,
+      library: `${name}`,
+      filename: `[name].js`,
       libraryTarget: 'umd',
       jsonpFunction: `webpackJsonp_${name}`
+    }
+  },
+  css: {
+    loaderOptions: {
+      less: {
+        lessOptions: {
+          modifyVars: {
+            'primary-color': '#3F579B',
+            'link-color': '#3F579B',
+            'border-color': '#3F579B'
+          },
+          javascriptEnabled: true
+        }
+      }
     }
   }
 }

@@ -1,11 +1,3 @@
-/*
- * @Description:
- * @Author: zhaoj
- * @Date: 2020-06-03 16:06:08
- * @LastEditTime: 2020-06-04 15:56:33
- * @LastEditors: zhaoj
- */
-
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
@@ -14,6 +6,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import { registerMicroApps, setDefaultMountApp, start } from 'qiankun'
 import pager from './pager'
+import '@/styles/index.scss'
 
 // 导入主应用ui库
 import LibraryUi from './libs/ui'
