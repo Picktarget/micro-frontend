@@ -1,4 +1,5 @@
 import http from '@/http'
+import Vue from 'vue'
 
 export function postAction(url, param) {
   const parameter = param ? param : {}
@@ -143,5 +144,49 @@ export function getBlob(url, parameter) {
     method: 'get',
     headers: parameter.headers,
     responseType: 'blob'
+  })
+}
+
+export function login(parameter) {
+  const deviceId = localStorage.getItem('deviceId')
+  return http.axios({
+    url: '/auth/form',
+    method: 'post',
+    headers: {
+      Authorization: 'Basic b2FfY2xpZW50Om9hX2NsaWVudF9zZWNyZXQ=',
+      imageDeviceId: deviceId
+    },
+    data: parameter
+  })
+}
+
+export function Logout() {
+  return new Promise(resolve => {
+    let logoutToken = Vue.ls.get('Access-Token')
+    Vue.ls.remove('Access-Token')
+    Vue.ls.remove('user_info')
+    Vue.ls.remove('menu')
+    Vue.ls.remove('KeyCtrl')
+    Vue.ls.remove('Login_Username')
+    Vue.ls.remove('Login_Userinfo')
+    localStorage.removeItem('BUTTONS')
+    logout(logoutToken)
+      .then(res => {
+        resolve(res)
+      })
+      .catch(() => {
+        resolve()
+      })
+  })
+}
+
+function logout(logoutToken) {
+  return http.axios({
+    url: '/logOut',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+      Authorization: 'Bearer ' + logoutToken
+    }
   })
 }

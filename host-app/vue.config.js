@@ -1,18 +1,6 @@
-const path = require('path')
-const packageName = require('./package').name
-
-function resolve(dir) {
-  return path.join(__dirname, dir)
-}
-
-const port = 7100 // dev port
-const isProduction = process.env.NODE_ENV === 'production'
+const port = 8100
 
 module.exports = {
-  publicPath: isProduction ? '/auth-sub' : '/',
-  outputDir: 'auth-sub',
-  assetsDir: 'static',
-  filenameHashing: true,
   devServer: {
     hot: true,
     disableHostCheck: true,
@@ -50,28 +38,8 @@ module.exports = {
   },
   chainWebpack: config => {
     config.plugin('html').tap(args => {
-      args[0].title = '协同办公平台认证中心'
+      args[0].title = '国久大数据协同办公平台'
       return args
     })
-
-    config.resolve.alias.set('vue$', 'vue/dist/vue.esm.js').set('@', resolve('src'))
-
-    config.output.library = `${packageName}-[name]`
-    config.output.libraryTarget = 'umd'
-    config.output.jsonpFunction = `webpackJsonp_${packageName}`
-  },
-  css: {
-    loaderOptions: {
-      less: {
-        lessOptions: {
-          modifyVars: {
-            'primary-color': '#3F579B',
-            'link-color': '#3F579B',
-            'border-color': '#3F579B'
-          },
-          javascriptEnabled: true
-        }
-      }
-    }
   }
 }

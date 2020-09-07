@@ -3,22 +3,22 @@ import VueRouter from 'vue-router'
 import UserLayout from '@/components/layouts/UserLayout.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
+import Dashboard from '../views/Dashboard.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path:'/',
-    redirect:'/user'
+    path: '/',
+    redirect: '/user'
   },
   {
     path: '/user',
-    name: 'UserLayout',
     component: UserLayout,
     children: [
       {
-        path:'',
-        redirect:'login'
+        path: '',
+        redirect: 'login'
       },
       {
         path: 'login',
@@ -31,6 +31,11 @@ const routes = [
         component: Register
       }
     ]
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: Dashboard
   },
   {
     path: '/about',

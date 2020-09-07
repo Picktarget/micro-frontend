@@ -68,7 +68,7 @@
 import JGraphicCode from '@/components/JGraphicCode'
 
 import { timeFix } from '@/utils/util'
-import { putAction, postAction } from '@/api/http-method'
+import { putAction, postAction, login, Logout } from '@/api/http-method'
 import { getEncryptedString } from '@/utils/aesEncrypt'
 
 const USER_INFO = 'Login_Userinfo'
@@ -149,47 +149,26 @@ export default {
         remember_me: that.formLogin.rememberMe
       }
       that.loginBtn = true
-      // 使用账户密码登陆
-      if (that.customActiveKey === 'tab1') {
-        that.form.validateFields(['username', 'password', 'inputCode'], { force: true }, (err, values) => {
-          if (!err) {
-            loginParams.username = values.username
-            loginParams.password = values.password
-            loginParams.imageCode = values.inputCode
-            that
-              .Login(loginParams)
-              .then(res => {
+      that.form.validateFields(['username', 'password', 'inputCode'], { force: true }, (err, values) => {
+        if (!err) {
+          loginParams.username = values.username
+          loginParams.password = values.password
+          loginParams.imageCode = values.inputCode
+          login(loginParams)
+            .then(res => {
+              this.departConfirm(res)
+            })
+            .catch(res => {
+              if (res.success) {
                 this.departConfirm(res)
-              })
-              .catch(res => {
-                if (res.success) {
-                  this.departConfirm(res)
-                } else {
-                  that.requestFailed(res)
-                }
-              })
-          } else {
-            that.loginBtn = false
-          }
-        })
-        // 使用手机号登陆
-      } else {
-        that.form.validateFields(['mobile', 'captcha'], { force: true }, (err, values) => {
-          if (!err) {
-            loginParams.mobile = values.mobile
-            loginParams.captcha = values.captcha
-            that
-              .PhoneLogin(loginParams)
-              .then(res => {
-                // window.console.log(res.data);
-                this.departConfirm(res)
-              })
-              .catch(err => {
-                that.requestFailed(err)
-              })
-          }
-        })
-      }
+              } else {
+                that.requestFailed(res)
+              }
+            })
+        } else {
+          that.loginBtn = false
+        }
+      })
     },
     getCaptcha(e) {
       e.preventDefault()
@@ -234,7 +213,7 @@ export default {
       this.loginSuccess()
     },
     stepCaptchaCancel() {
-      this.Logout().then(() => {
+      Logout().then(() => {
         this.loginBtn = false
         this.stepCaptchaVisible = false
       })
@@ -312,7 +291,7 @@ export default {
         this.loginSuccess()
       } else {
         this.requestFailed(res)
-        this.Logout()
+        Logout()
       }
     },
     departOk() {
@@ -334,7 +313,7 @@ export default {
           this.loginSuccess()
         } else {
           this.requestFailed(res)
-          this.Logout().then(() => {
+          Logout().then(() => {
             this.departClear()
           })
         }

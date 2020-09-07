@@ -95,7 +95,7 @@ export default {
         }
       }
       .desc {
-        font-size: 14px;
+        font-size: 26px;
         color: rgba(0, 0, 0, 0.45);
         margin-top: 12px;
         margin-bottom: 40px;

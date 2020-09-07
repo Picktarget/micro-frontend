@@ -3,11 +3,13 @@ import axios from 'axios'
 const ACCESS_TOKEN = 'Access-Token'
 
 // 创建 axios 实例
+let protocol = location.protocol //协议
+let host = location.host //主机
+//动态请求地址
+const actualBaseUrl = protocol + '//' + host + (process.env.VUE_APP_BASE_API || '')
+
 const instance = axios.create({
-  baseURL:
-    process.env.NODE_ENV === 'development'
-      ? 'http://localhost:7100' + process.env.VUE_APP_BASE_API || ''
-      : process.env.VUE_APP_BASE_API || '',
+  baseURL: actualBaseUrl,
   timeout: 15000 // 请求超时时间
 })
 
